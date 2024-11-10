@@ -3,6 +3,7 @@ package org.ecommerce.productservice.services;
 import org.ecommerce.productservice.dtos.FakeStoreAllProductsResponseDto;
 import org.ecommerce.productservice.dtos.FakeStoreCreateProductRequestDto;
 import org.ecommerce.productservice.dtos.FakeStoreCreateProductResponseDto;
+import org.ecommerce.productservice.dtos.FakeStoreGetProductResponseDto;
 import org.ecommerce.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,11 @@ public class ProductServiceFakestoreImpl implements ProductService{
             allReterivedProducts.add(product.toProduct());
         });
         return allReterivedProducts;
+    }
+
+    @Override
+    public Product getProduct(Long productId) {
+        FakeStoreGetProductResponseDto fakeStoreGetProductResponseDto = restTemplate.getForObject(fakeStoreUrl + "/" + productId, FakeStoreGetProductResponseDto.class);
+        return fakeStoreGetProductResponseDto.toProduct();
     }
 }

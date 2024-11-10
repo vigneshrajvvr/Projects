@@ -3,6 +3,7 @@ package org.ecommerce.productservice.controllers;
 import org.ecommerce.productservice.dtos.CreateProductRequestDto;
 import org.ecommerce.productservice.dtos.CreateProductResponseDto;
 import org.ecommerce.productservice.dtos.GetAllProductResponseDto;
+import org.ecommerce.productservice.dtos.GetSingleProductResponseDto;
 import org.ecommerce.productservice.models.Product;
 import org.ecommerce.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public void getSigleProduct(@PathVariable("id") Long productId) {
-
+    public GetSingleProductResponseDto getSigleProduct(@PathVariable("id") Long productId) {
+        Product singleProduct = productService.getProduct(productId);
+        return GetSingleProductResponseDto.fromProduct(singleProduct);
     }
 
     @DeleteMapping("/{id}")

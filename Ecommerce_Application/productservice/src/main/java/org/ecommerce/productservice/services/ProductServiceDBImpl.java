@@ -16,4 +16,9 @@ public class ProductServiceDBImpl implements ProductService{
     public List<Product> getAllProducts() {
         return null;
     }
+
+    @Override
+    public Product getProduct(Long productId) {
+        return null;
+    }
 }
