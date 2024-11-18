@@ -50,10 +50,13 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable("id") Long productId) {
-
+        productService.deleteProduct(productId);
     }
 
-    private void updateProduct(){}
+    @PatchMapping("/{id}")
+    private void updateProduct(@PathVariable("id") Long productId){
+
+    }
 
     private void replaceProduct(){}
 

@@ -21,4 +21,9 @@ public class ProductServiceDBImpl implements ProductService{
     public Product getProduct(Long productId) {
         return null;
     }
+
+    @Override
+    public void deleteProduct(Long productId) {
+
+    }
 }

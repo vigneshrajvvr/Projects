@@ -62,4 +62,9 @@ public class ProductServiceFakestoreImpl implements ProductService{
         FakeStoreGetProductResponseDto fakeStoreGetProductResponseDto = restTemplate.getForObject(fakeStoreUrl + "/" + productId, FakeStoreGetProductResponseDto.class);
         return fakeStoreGetProductResponseDto.toProduct();
     }
+
+    @Override
+    public void deleteProduct(Long productId) {
+        restTemplate.delete(fakeStoreUrl + "/" + productId);
+    }
 }
