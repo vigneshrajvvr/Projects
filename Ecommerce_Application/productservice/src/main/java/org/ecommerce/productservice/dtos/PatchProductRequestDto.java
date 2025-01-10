@@ -1,12 +1,14 @@
 package org.ecommerce.productservice.dtos;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import org.ecommerce.productservice.models.Product;
 
 @Getter
 @Setter
-public class CreateProductRequestDto {
+public class PatchProductRequestDto {
+    private long productId;
     private String title;
     private double price;
     private String description;
@@ -15,6 +17,7 @@ public class CreateProductRequestDto {
 
     public Product toProduct() {
         Product product = new Product();
+        product.setProductId(this.productId);
         product.setTitle(this.title);
         product.setPrice(this.price);
         product.setDescription(this.description);

@@ -24,6 +24,10 @@ public class ProductServiceDBImpl implements ProductService{
 
     @Override
     public void deleteProduct(Long productId) {
+    }
 
+    @Override
+    public Product updateProduct(Product product) {
+        return null;
     }
 }

@@ -1,9 +1,8 @@
-package org.ecommerce.productservice.dtos;
+package org.ecommerce.productservice.dtos.products;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.ecommerce.productservice.models.Product;
-import org.springframework.web.service.annotation.GetExchange;
 
 @Getter
 @Setter

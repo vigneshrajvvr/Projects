@@ -1,17 +1,19 @@
 package org.ecommerce.productservice.services;
 
-import org.ecommerce.productservice.dtos.FakeStoreAllProductsResponseDto;
-import org.ecommerce.productservice.dtos.FakeStoreCreateProductRequestDto;
-import org.ecommerce.productservice.dtos.FakeStoreCreateProductResponseDto;
-import org.ecommerce.productservice.dtos.FakeStoreGetProductResponseDto;
+import org.ecommerce.productservice.dtos.*;
 import org.ecommerce.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service("fakeStoreProductService")
 public class ProductServiceFakestoreImpl implements ProductService{
@@ -49,12 +51,12 @@ public class ProductServiceFakestoreImpl implements ProductService{
 
     @Override
     public List<Product> getAllProducts() {
-        FakeStoreAllProductsResponseDto[] allProdcuts = restTemplate.getForObject(fakeStoreUrl, FakeStoreAllProductsResponseDto[].class);
-        List<Product> allReterivedProducts = new ArrayList<>();
-        Arrays.stream(allProdcuts).forEach(product -> {
-            allReterivedProducts.add(product.toProduct());
+        FakeStoreAllProductsResponseDto[] allProducts = restTemplate.getForObject(fakeStoreUrl, FakeStoreAllProductsResponseDto[].class);
+        List<Product> allRetrievedProducts = new ArrayList<>();
+        Arrays.stream(allProducts).forEach(product -> {
+            allRetrievedProducts.add(product.toProduct());
         });
-        return allReterivedProducts;
+        return allRetrievedProducts;
     }
 
     @Override
@@ -67,4 +69,22 @@ public class ProductServiceFakestoreImpl implements ProductService{
     public void deleteProduct(Long productId) {
         restTemplate.delete(fakeStoreUrl + "/" + productId);
     }
+
+    @Override
+    public Product updateProduct(Product product) {
+        FakeStorePatchProductRequestDto fakeStorePatchProductRequestDto = new FakeStorePatchProductRequestDto();
+        fakeStorePatchProductRequestDto.setProductId(product.getProductId());
+        fakeStorePatchProductRequestDto.setDescription(product.getDescription());
+        fakeStorePatchProductRequestDto.setCategory(product.getCategory());
+        fakeStorePatchProductRequestDto.setPrice(product.getPrice());
+        fakeStorePatchProductRequestDto.setTitle(product.getTitle());
+        fakeStorePatchProductRequestDto.setImage(product.getImageUrl());
+
+        HttpEntity<FakeStorePatchProductRequestDto> requestEntity = new HttpEntity<>(fakeStorePatchProductRequestDto);
+
+        HttpEntity<FakeStorePatchProductReponseDto> fakeStorePatchProductReponseDto = restTemplate.exchange(fakeStoreUrl + "/" + product.getProductId(), HttpMethod.PATCH, requestEntity, FakeStorePatchProductReponseDto.class);
+
+        return fakeStorePatchProductReponseDto.getBody().toProduct();
+    }
+
 }
