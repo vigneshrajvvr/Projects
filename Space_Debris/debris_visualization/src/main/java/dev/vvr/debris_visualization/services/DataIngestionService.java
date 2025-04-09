@@ -1,5 +1,7 @@
-package dev.vvr.debris_visualization.dataingestion;
+package dev.vvr.debris_visualization.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.vvr.debris_visualization.models.DebrisData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,27 @@ public class DataIngestionService {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Scheduled(fixedDelay = 5000)
     public void ingestDebrisData() {
         logger.debug("Ingesting data: " + new Date());
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(DEBRIS_DATA_FILE_PATH))) {
             String line;
             while((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
-                kafkaTemplate.send(TOPIC_NAME, line);
+                String[] debrisDetails = line.split(",");
+                String debrisId = debrisDetails[0].split(":")[1];
+                String epoch = debrisDetails[1].split(":")[1];
+                double inclination = Double.parseDouble(debrisDetails[2].split(":")[1]);
+                double raan = Double.parseDouble(debrisDetails[3].split(":")[1]);
+                DebrisData debrisData = new DebrisData(debrisId, epoch, inclination, raan);
+                try {
+                    String debrisJson = objectMapper.writeValueAsString(debrisData);
+                    kafkaTemplate.send(TOPIC_NAME, debrisJson);
+                    logger.info("Sent to Kafka: " + debrisJson);
+                } catch (Exception ex) {
+                    logger.error("Error converting to JSON or sending to Kafka: " + ex.getMessage());
+                }
             }
         } catch (IOException ioException) {
             logger.error(ioException.getMessage());
